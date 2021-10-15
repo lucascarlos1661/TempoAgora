@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins-Regular'
     },
     textTemperature: {
-        marginHorizontal: 17,
+        marginHorizontal: 10,
         fontSize: 40
     },
     rigthArea: {
