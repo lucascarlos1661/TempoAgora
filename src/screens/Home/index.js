@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { View, Text, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useNavigation, useFocusEffect } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -12,7 +12,7 @@ import { COLLECTION_CITIES } from '../../configs/database'
 export function Home() {
 
     const [data, setData] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [lastUpdate, setLastUpdate] = useState('')
     const navigation = useNavigation()
 
@@ -27,15 +27,25 @@ export function Home() {
         let hours = currentDate.getHours()
         let minutes = currentDate.getMinutes()
 
+        if (month.toString().length < 2)
+            month = '0' + month
+        if (day.toString().length < 2)
+            day = '0' + day
+        if (hours.toString().length < 2)
+            hours = '0' + hours
+        if (minutes.toString().length < 2)
+            minutes = '0' + minutes
+
         formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`
 
+        setIsLoading(false)
         setLastUpdate(formattedDate)
         setData(cities)
     }
 
     useFocusEffect(useCallback(() => {
         loadCities()
-    }, [data]))
+    }, []))
 
     function handleAddNewCity() {
         navigation.navigate('NewCity')
@@ -52,24 +62,33 @@ export function Home() {
 
             <View style={styles.viewItems}>
 
-                <FlatList
-                    data={data}
-                    keyExtractor={item => item.cep}
-                    contentContainerStyle={{ paddingBottom: 30 }}
-                    // onRefresh={() => loadCities()}
-                    // refreshing={isLoading}
-                    renderItem={({ item }) => (
-                        <Cityitem
-                            data={item}
-                            onPress={() => handleCityDetails(item)}
-                        />
-                    )}
-                />
+                {isLoading ?
+
+                    <ActivityIndicator size='large' color={'#000'} style={{ marginTop: 20 }} />
+                    :
+                    <FlatList
+                        data={data}
+                        keyExtractor={item => item.cep}
+                        contentContainerStyle={{ paddingBottom: 30 }}
+                        onRefresh={() => loadCities()}
+                        refreshing={isLoading}
+                        renderItem={({ item }) => (
+                            <Cityitem
+                                data={item}
+                                onPress={() => handleCityDetails(item)}
+                            />
+                        )}
+                        ListFooterComponent={
+                            <TouchableOpacity style={styles.addNewCity} onPress={handleAddNewCity}>
+                                <Ionicons name='add-circle-outline' size={40} />
+                                <Text style={styles.newCity}>INCLUIR NOVA CIDADE</Text>
+                            </TouchableOpacity>
+                        }
+                    />
+                }
+
             </View>
-            <TouchableOpacity style={styles.addNewCity} onPress={handleAddNewCity}>
-                <Ionicons name='add-circle-outline' size={40} />
-                <Text style={styles.newCity}>INCLUIR NOVA CIDADE</Text>
-            </TouchableOpacity>
+
 
 
         </View>
