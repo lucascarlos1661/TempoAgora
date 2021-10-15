@@ -5,8 +5,13 @@ export const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: "center",
-        paddingHorizontal: 0,
+        marginVertical: 8,
         height: 85,
+    },
+    button: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 9
     },
     leftArea: {
         flexDirection: 'row',
@@ -20,8 +25,11 @@ export const styles = StyleSheet.create({
         backgroundColor: theme.colors.purple
     },
     city: {
-        fontWeight: 'bold',
-        fontSize: 16
+        fontSize: 16,
+        fontFamily: 'Poppins-Bold'
+    },
+    street: {
+        fontFamily: 'Poppins-Regular'
     },
     textTemperature: {
         marginHorizontal: 17,

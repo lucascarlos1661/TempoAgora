@@ -8,29 +8,47 @@ import { styles } from './styles'
 import { Header } from '../../components/Header'
 import { Cityitem } from '../../components/CityItem'
 import { COLLECTION_CITIES } from '../../configs/database'
+import hgBrasilApi from '../../Api/hgBrasilApi'
 
 export function Home() {
 
-    const [cities, setCities] = useState('')
+    const [data, setData] = useState('')    
+    const [isLoading, setIsLoading] = useState(false)
     const navigation = useNavigation()
 
     async function loadCities() {
-        const response = await AsyncStorage.getItem(COLLECTION_CITIES)
-        const storage = response ? JSON.parse(response) : []
+        let storage = await AsyncStorage.getItem(COLLECTION_CITIES)
+        let cities = storage ? JSON.parse(storage) : []
 
-        setCities(storage)
+        // cities.map(async function (e) {
+
+        //     const formattedCity = e.city.replace(/\s+/g, '_')
+        //     const formattedState = e.state.replace(/\s+/g, '_')
+
+        //     const json = await hgBrasilApi.checkWeather(formattedCity, formattedState)
+        //     setLastUpdate(`${json.data.results.date} ${json.data.results.time}`)
+
+        //     const cityWithWeather = {
+        //         cep: e.cep,
+        //         street: e.city,
+        //         state: e.state,
+        //         city: e.street,
+        //         weather: json.data.results.temp
+        //     }
+        // })
+        setData(cities)
     }
 
     useFocusEffect(useCallback(() => {
         loadCities()
-    }, [cities]))
+    }, [data]))
 
     function handleAddNewCity() {
         navigation.navigate('NewCity')
     }
 
     function handleCityDetails(citySelected) {
-        navigation.navigate('CityDetails', {citySelected})
+        navigation.navigate('CityDetails', { citySelected })
     }
 
     return (
@@ -41,10 +59,11 @@ export function Home() {
             <View style={styles.viewItems}>
 
                 <FlatList
-                    data={cities}
+                    data={data}
                     keyExtractor={item => item.cep}
-                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 30 }}
+                    // onRefresh={() => loadCities()}
+                    // refreshing={isLoading}
                     renderItem={({ item }) => (
                         <Cityitem
                             data={item}
@@ -52,13 +71,11 @@ export function Home() {
                         />
                     )}
                 />
-
-
-                <TouchableOpacity style={styles.addNewCity} onPress={handleAddNewCity}>
-                    <Ionicons name='add-circle-outline' size={40} />
-                    <Text>INCLUIR NOVA CIDADE</Text>
-                </TouchableOpacity>
             </View>
+            <TouchableOpacity style={styles.addNewCity} onPress={handleAddNewCity}>
+                <Ionicons name='add-circle-outline' size={40} />
+                <Text style={styles.newCity}>INCLUIR NOVA CIDADE</Text>
+            </TouchableOpacity>
 
 
         </View>

@@ -19,27 +19,32 @@ export function NewCity() {
             Alert.alert("Cep invalido", 'Digite um cep válido')
         } else {
 
-            let json = await cepApi.checkCep(cep)
+            const json = await cepApi.checkCep(cep)
 
-            if (json.erro == true) {
+            if (json.data.erro == true) {
                 Alert.alert('Cep inválido', 'Digite outro cep')
             } else {
 
                 const newCity = {
-                    cep: json.cep,
-                    street: json.logradouro,
-                    state: json.uf,
-                    city: json.localidade
+                    cep: json.data.cep,
+                    street: json.data.logradouro,
+                    state: json.data.uf,
+                    city: json.data.localidade
 
                 }
 
                 const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
                 const cities = storage ? JSON.parse(storage) : []
 
-                await AsyncStorage.setItem(
-                    COLLECTION_CITIES,
-                    JSON.stringify([...cities, newCity])
-                )
+                try{
+                    await AsyncStorage.setItem(
+                        COLLECTION_CITIES,
+                        JSON.stringify([...cities, newCity])
+                    )
+                    Alert.alert('Adicionada com sucesso')
+                } catch (e){
+
+                }
             }
         }
     }
@@ -51,7 +56,7 @@ export function NewCity() {
             <Header title={'Nova Cidade'} backButton={true} />
 
             <View style={styles.centerView}>
-                <Text>Digite o Cep da cidade</Text>
+                <Text style={styles.cepText}>Digite o Cep da cidade</Text>
                 <TextInput
                     value={cep}
                     onChangeText={t => setCep(mask(t, ['99999-999']))}

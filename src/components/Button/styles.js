@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 22,
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Poppins-Bold'
     }
 })

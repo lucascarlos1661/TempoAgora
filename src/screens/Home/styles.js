@@ -5,14 +5,17 @@ export const styles = StyleSheet.create({
         padding: 20
     },
     lastUpdate: {
-        marginTop: 20
+        marginTop: 20,
+        fontFamily: 'Poppins-Regular'
     },
     viewItems: {
         alignItems: 'center',
-        marginVertical: 20
     },
     addNewCity: {
         alignItems:"center",
-        marginVertical: 20
+        marginBottom: 20
+    },
+    newCity: {
+        fontFamily: 'Poppins-Regular'
     }
 })

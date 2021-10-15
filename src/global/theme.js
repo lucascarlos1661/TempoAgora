@@ -1,5 +1,6 @@
 export const theme = {
     colors: {
-        purple: '#D055C6'
+        purple: '#D055C6',
+        lightRed: '#F17485'
     }
 }

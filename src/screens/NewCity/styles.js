@@ -4,7 +4,6 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,    
-        flexDirection: 'column',
     },
     centerView: {
         flex: 1,
@@ -14,6 +13,11 @@ export const styles = StyleSheet.create({
         marginTop: 15,
         fontSize: 40,
         textAlign: 'center',
-        borderBottomWidth: StyleSheet.hairlineWidth
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        fontFamily: 'Poppins-Regular'
     },
+    cepText: {
+        fontFamily: 'Poppins-Regular',
+        fontSize: 14
+    }
 })

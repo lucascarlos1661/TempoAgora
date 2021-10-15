@@ -12,5 +12,6 @@ export const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         marginTop: 10,
+        fontFamily: 'Poppins-Bold'
     }
 })
