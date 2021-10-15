@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, Alert } from 'react-native'
 import { mask, } from "remask"
+import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { styles } from './styles'
@@ -9,20 +10,28 @@ import { Header } from '../../components/Header'
 import { Button } from '../../components/Button'
 import { COLLECTION_CITIES } from '../../configs/database'
 import cepApi from '../../Api/cepApi'
+import { ModalView } from '../../components/ModalView'
 
 export function NewCity() {
 
+    const navigation = useNavigation()
+
     const [cep, setCep] = useState('')
+    const [modalTitle, setModalTitle] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
+    const [saveError, setSaveError] = useState(true)
 
     async function handleSave() {
         if (cep.length < 9) {
-            Alert.alert("Cep invalido", 'Digite um cep válido')
+            setModalTitle('Cep inválido')
+            setModalVisible(true)
         } else {
 
             const json = await cepApi.checkCep(cep)
 
             if (json.data.erro == true) {
-                Alert.alert('Cep inválido', 'Digite outro cep')
+                setModalTitle('Cep inválido')
+                setModalVisible(true)
             } else {
 
                 const newCity = {
@@ -36,13 +45,15 @@ export function NewCity() {
                 const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
                 const cities = storage ? JSON.parse(storage) : []
 
-                try{
+                try {
                     await AsyncStorage.setItem(
                         COLLECTION_CITIES,
                         JSON.stringify([...cities, newCity])
                     )
-                    Alert.alert('Adicionada com sucesso')
-                } catch (e){
+                    setModalTitle('Cidade salva com sucesso')
+                    setModalVisible(true)
+                    setSaveError(false)
+                } catch (e) {
 
                 }
             }
@@ -68,6 +79,20 @@ export function NewCity() {
             </View>
 
             <Button text={'Salvar'} color={theme.colors.purple} onPress={handleSave} />
+
+            <ModalView
+                title={modalTitle}
+                booleanModal={false}
+                onPressFalse={() => navigation.navigate('Home')}
+                onPressTrue={() => setModalVisible(false)}
+                saveError = {saveError}
+                animationType="fade"
+                transparent
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible)
+                }}
+            />
 
         </View>
     )
