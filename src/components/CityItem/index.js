@@ -1,18 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import { RectButton } from 'react-native-gesture-handler'
 import { Card } from 'react-native-shadow-cards'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import { styles } from './styles'
+import hgBrasilApi from '../../Api/hgBrasilApi'
+
 
 export function Cityitem({ data, ...rest }) {
+
+    const [weather, setWeather] = useState()
+
+    async function loadWeather() {
+        const formattedCity = data.city.replace(/\s+/g, '_')
+        const formattedState = data.state.replace(/\s+/g, '_')
+
+        const json = await hgBrasilApi.checkWeather(formattedCity, formattedState)
+
+        setWeather(json.data.results.temp)
+    }
+
+    useEffect(() => {
+        loadWeather()
+    }, [])
+
     return (
         <Card style={styles.container} elevation={4} cornerRadius={8} >
             <TouchableOpacity {...rest} style={styles.button}>
                 <View style={styles.leftArea}>
                     <View style={styles.leftBorder} />
-                    <Text style={styles.textTemperature}>°</Text>
+                    <Text style={styles.textTemperature}>{weather}°</Text>
 
                     <View>
                         <Text style={styles.city}>{data.city}</Text>

@@ -8,34 +8,18 @@ import { styles } from './styles'
 import { Header } from '../../components/Header'
 import { Cityitem } from '../../components/CityItem'
 import { COLLECTION_CITIES } from '../../configs/database'
-import hgBrasilApi from '../../Api/hgBrasilApi'
 
 export function Home() {
 
-    const [data, setData] = useState('')    
+    const [data, setData] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [lastUpdate, setLastUpdate] = useState('')
     const navigation = useNavigation()
 
     async function loadCities() {
         let storage = await AsyncStorage.getItem(COLLECTION_CITIES)
         let cities = storage ? JSON.parse(storage) : []
 
-        // cities.map(async function (e) {
-
-        //     const formattedCity = e.city.replace(/\s+/g, '_')
-        //     const formattedState = e.state.replace(/\s+/g, '_')
-
-        //     const json = await hgBrasilApi.checkWeather(formattedCity, formattedState)
-        //     setLastUpdate(`${json.data.results.date} ${json.data.results.time}`)
-
-        //     const cityWithWeather = {
-        //         cep: e.cep,
-        //         street: e.city,
-        //         state: e.state,
-        //         city: e.street,
-        //         weather: json.data.results.temp
-        //     }
-        // })
         setData(cities)
     }
 
@@ -54,7 +38,7 @@ export function Home() {
     return (
         <View style={styles.container}>
             <Header title={'Tempo Agora'} backButton={false} />
-            <Text style={styles.lastUpdate}>Ultima atualização: </Text>
+            <Text style={styles.lastUpdate}>Ultima atualização: {lastUpdate}</Text>
 
             <View style={styles.viewItems}>
 
