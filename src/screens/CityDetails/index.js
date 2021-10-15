@@ -25,7 +25,7 @@ export function CityDetails() {
             const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
             const cities = JSON.parse(storage)
             const alteredCities = cities.filter(function (e) {
-                return e.cep !== citySelected.cep
+                return e.id !== citySelected.id
 
             })
             AsyncStorage.setItem(COLLECTION_CITIES, JSON.stringify(alteredCities))

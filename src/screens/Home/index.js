@@ -68,7 +68,7 @@ export function Home() {
                     :
                     <FlatList
                         data={data}
-                        keyExtractor={item => item.cep}
+                        keyExtractor={item => item.id}
                         contentContainerStyle={{ paddingBottom: 30 }}
                         onRefresh={() => loadCities()}
                         refreshing={isLoading}
