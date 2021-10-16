@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Card } from 'react-native-shadow-cards'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import NetInfo from "@react-native-community/netinfo"
 
 import { styles } from './styles'
 import hgBrasilApi from '../../Api/hgBrasilApi'
@@ -10,8 +11,19 @@ import hgBrasilApi from '../../Api/hgBrasilApi'
 export function Cityitem({ data, ...rest }) {
 
     const [weather, setWeather] = useState()
+    const [isConnected, setIsConnected] = useState(true)
 
     async function loadWeather() {
+
+        NetInfo.fetch().then(state => {
+            setIsConnected(state.isConnected)
+        })
+
+        if (isConnected == false) {
+            setWeather('--')
+            return
+        }
+
         const formattedCity = data.city.replace(/\s+/g, '_')
         const formattedState = data.state.replace(/\s+/g, '_')
 

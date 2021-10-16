@@ -1,22 +1,37 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useNavigation, useFocusEffect } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import NetInfo from "@react-native-community/netinfo"
 
 import { styles } from './styles'
 import { Header } from '../../components/Header'
 import { Cityitem } from '../../components/CityItem'
 import { COLLECTION_CITIES } from '../../configs/database'
+import { ModalView } from '../../components/ModalView'
 
 export function Home() {
 
     const [data, setData] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [lastUpdate, setLastUpdate] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalTitle, setModalTitle] = useState('')
+    const [isConnected, setIsConnected] = useState(true)
+
     const navigation = useNavigation()
 
     async function loadCities() {
+        NetInfo.fetch().then(state => {
+            setIsConnected(state.isConnected)
+        })
+
+        if (isConnected == false) {
+            setModalTitle('Sem conexão com a internet, as informações poderão estar desatualizadas.')
+            setModalVisible(true)
+        }
+
         let storage = await AsyncStorage.getItem(COLLECTION_CITIES)
         let cities = storage ? JSON.parse(storage) : []
 
@@ -88,11 +103,18 @@ export function Home() {
                         }
                     />
                 }
-
+                <ModalView
+                    title={modalTitle}
+                    onPressFalse={() => setModalVisible(false)}
+                    animationType="fade"
+                    transparent
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible)
+                    }
+                    }
+                />
             </View>
-
-
-
         </View>
     )
 }

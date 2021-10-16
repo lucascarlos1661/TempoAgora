@@ -4,6 +4,7 @@ import { mask, } from "remask"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import uuid from 'react-native-uuid'
+import NetInfo from "@react-native-community/netinfo"
 
 import { styles } from './styles'
 import { theme } from '../../global/theme'
@@ -22,38 +23,55 @@ export function NewCity() {
     const [modalVisible, setModalVisible] = useState(false)
     const [saveError, setSaveError] = useState(true)
     const [isLoading, setIsLoading] = useState(false)
+    const [isConnected, setIsConnected] = useState(true)
 
     async function handleSave() {
+
+        NetInfo.fetch().then(state => {
+            setIsConnected(state.isConnected)
+        })
+
         setIsLoading(true)
+
         if (cep.length < 9) {
-            setModalTitle('Cep inválido')
+            setModalTitle('Cep inválido, redigite')
             setModalVisible(true)
+            setIsLoading(false)
+            return
+
+        } else if (isConnected == false) {
+            setModalTitle('Falha ao buscar cep, sem conexão com a internet')
+            setModalVisible(true)
+            setIsLoading(false)
+            return
+        }
+
+        const json = await cepApi.checkCep(cep)
+
+        if (json.data.erro == true) {
+            setModalTitle('Cep não encontrado')
+            setModalVisible(true)
+            setIsLoading(false)
         } else {
-            const json = await cepApi.checkCep(cep)
+            const newCity = {
+                id: uuid.v4(),
+                cep: json.data.cep,
+                street: json.data.logradouro,
+                state: json.data.uf,
+                city: json.data.localidade
 
-            if (json.data.erro == true) {
-                setModalTitle('Cep não encontrado')
-                setModalVisible(true)
-            } else {
-                const newCity = {
-                    id: uuid.v4(),
-                    cep: json.data.cep,
-                    street: json.data.logradouro,
-                    state: json.data.uf,
-                    city: json.data.localidade
-
-                }
-                const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
-                const cities = storage ? JSON.parse(storage) : []
-
-                await AsyncStorage.setItem(
-                    COLLECTION_CITIES,
-                    JSON.stringify([...cities, newCity])
-                )
-                setModalTitle('Cidade salva com sucesso')
-                setModalVisible(true)
-                setSaveError(false)
             }
+            const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
+            const cities = storage ? JSON.parse(storage) : []
+
+            await AsyncStorage.setItem(
+                COLLECTION_CITIES,
+                JSON.stringify([...cities, newCity])
+            )
+            setModalTitle('Cidade salva com sucesso')
+            setModalVisible(true)
+            setSaveError(false)
+
         }
     }
 

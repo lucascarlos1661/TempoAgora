@@ -15,7 +15,10 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontFamily: 'Poppins-Bold',
-        fontSize: 18
+        textAlign: 'center',
+        fontSize: 20,
+        marginTop: 20
+
     },
     bottomView: {
         flexDirection: 'row',
