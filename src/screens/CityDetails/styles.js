@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     },
     card: {
         marginTop: 30,
-        height: 140,
+        height: 190,
         flexDirection: 'row'
     },
     leftCard: {

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, Alert } from 'react-native'
+import { View, Text, TextInput, ActivityIndicator } from 'react-native'
 import { mask, } from "remask"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import uuid from 'react-native-uuid'
 
 import { styles } from './styles'
 import { theme } from '../../global/theme'
@@ -20,42 +21,38 @@ export function NewCity() {
     const [modalTitle, setModalTitle] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
     const [saveError, setSaveError] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
 
     async function handleSave() {
+        setIsLoading(true)
         if (cep.length < 9) {
             setModalTitle('Cep inválido')
             setModalVisible(true)
         } else {
-
             const json = await cepApi.checkCep(cep)
 
             if (json.data.erro == true) {
-                setModalTitle('Cep inválido')
+                setModalTitle('Cep não encontrado')
                 setModalVisible(true)
             } else {
-
                 const newCity = {
+                    id: uuid.v4(),
                     cep: json.data.cep,
                     street: json.data.logradouro,
                     state: json.data.uf,
                     city: json.data.localidade
 
                 }
-
                 const storage = await AsyncStorage.getItem(COLLECTION_CITIES)
                 const cities = storage ? JSON.parse(storage) : []
 
-                try {
-                    await AsyncStorage.setItem(
-                        COLLECTION_CITIES,
-                        JSON.stringify([...cities, newCity])
-                    )
-                    setModalTitle('Cidade salva com sucesso')
-                    setModalVisible(true)
-                    setSaveError(false)
-                } catch (e) {
-
-                }
+                await AsyncStorage.setItem(
+                    COLLECTION_CITIES,
+                    JSON.stringify([...cities, newCity])
+                )
+                setModalTitle('Cidade salva com sucesso')
+                setModalVisible(true)
+                setSaveError(false)
             }
         }
     }
@@ -76,6 +73,12 @@ export function NewCity() {
                     style={styles.inputText}
                 >
                 </TextInput>
+
+                {isLoading ?
+                    <ActivityIndicator size={'large'} color={'#000'} style={{ marginTop: 10 }} />
+                    :
+                    <View />
+                }
             </View>
 
             <Button text={'Salvar'} color={theme.colors.purple} onPress={handleSave} />
@@ -85,7 +88,7 @@ export function NewCity() {
                 booleanModal={false}
                 onPressFalse={() => navigation.navigate('Home')}
                 onPressTrue={() => setModalVisible(false)}
-                saveError = {saveError}
+                saveError={saveError}
                 animationType="fade"
                 transparent
                 visible={modalVisible}

@@ -66,10 +66,12 @@ export function Home() {
 
                     <ActivityIndicator size='large' color={'#000'} style={{ marginTop: 20 }} />
                     :
+
                     <FlatList
                         data={data}
                         keyExtractor={item => item.id}
                         contentContainerStyle={{ paddingBottom: 30 }}
+                        showsVerticalScrollIndicator={false}
                         onRefresh={() => loadCities()}
                         refreshing={isLoading}
                         renderItem={({ item }) => (

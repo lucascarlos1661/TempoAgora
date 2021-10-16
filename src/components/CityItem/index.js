@@ -20,6 +20,29 @@ export function Cityitem({ data, ...rest }) {
         setWeather(json.data.results.temp)
     }
 
+    function abridgedControl(fullName, limit) {
+        if (fullName.length > limit) {
+            return toAbridged(fullName)
+        }
+        return fullName
+    }
+
+    function toAbridged(fullName) {
+        const token = '.'
+        const separator = ' '
+        const names = removePrepositions(fullName).split(separator)
+        const firstName = names[0]
+        let surnames = ''
+        names
+            .filter((name, index) => index)
+            .map(name => surnames += `${separator}${name.charAt()}${token}`)
+        return `${firstName}${surnames.toUpperCase()}`
+    }
+
+    function removePrepositions(fullName) {
+        return fullName.replace(/\ dos|\ das|\ dos|\ das|\ de|\ d\'/gi, '')
+    }
+
     useEffect(() => {
         loadWeather()
     }, [])
@@ -33,7 +56,7 @@ export function Cityitem({ data, ...rest }) {
 
                     <View>
                         <Text style={styles.city}>{data.city}</Text>
-                        <Text style={styles.street}>{data.street}</Text>
+                        <Text style={styles.street}>{abridgedControl(data.street, 30)}</Text>
                     </View>
                 </View>
 
