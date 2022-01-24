@@ -1,18 +1,31 @@
-# Projeto
+![appTempoAgora](https://user-images.githubusercontent.com/59378841/150879239-0f8bb83f-f425-4210-951a-26f5b59d0692.gif)
 
-Aplicativo desenvolvido para consulta de tempo, o usuário digita um local através do cep, é feita a validação se esse cep é válido através de uma API e listado para exibir a temperatura do local através de uma outra API.
+## 💻 Projeto
 
-## Tecnologias
+Aplicativo desenvolvido para consulta de tempo. O usuário digita um CEP, é feita a validação se esse CEP é válido, caso seja o app armazena esse local na memória e através de uma segunda API é feita a consulta da temperatura no local informado.
+## ✨ Tecnologias
  - React Native
  - Consumos de APIS com axios
  - Flat List
  - Assync Storage
  - Uso de fontes personalisadas
+## :hammer_and_wrench: APIs
+Para o funcionamento do app, é necessário o consumo de duas APIs.
 
-# Instalação
+A primeira para consulta do CEP digitado pelo usuário, documentação disponível em: 
 
-Para instalar e executar o projeto é necessário utilizar os comandos:
-yarn install e 
+*https://viacep.com.br/*
+
+E a segunda para consulta do clima no CEP informado, documentação disponível em:
+*https://hgbrasil.com/status/weather*
+
+## Executando o projeto
+
+Para instalar o projeto é necessário utilizar o comando:
+```
+yarn install
+```
+Para executar o projeto é necessário usar o comando:
+```
 npx react-native run-android
-
-![tempoAgora](https://user-images.githubusercontent.com/59378841/143340735-0e9e1e5a-b52b-4ae7-ac2d-994a8ab36507.gif)
+```
