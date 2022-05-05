@@ -1,5 +1,3 @@
-![appTempoAgora](https://user-images.githubusercontent.com/59378841/150879239-0f8bb83f-f425-4210-951a-26f5b59d0692.gif)
-
 ## 💻 Projeto
 
 Aplicativo desenvolvido para consulta de tempo. O usuário digita um CEP, é feita a validação se esse CEP é válido, caso seja o app armazena esse local na memória e através de uma segunda API é feita a consulta da temperatura no local informado.
@@ -29,3 +27,5 @@ Para executar o projeto é necessário usar o comando:
 ```
 npx react-native run-android
 ```
+
+<img src="https://user-images.githubusercontent.com/59378841/150879239-0f8bb83f-f425-4210-951a-26f5b59d0692.gif" width="400" />
